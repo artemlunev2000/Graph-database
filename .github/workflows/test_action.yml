@@ -10,8 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Set up container
-        run: |
-          docker build -t task1 .
-          docker run -it task1
+        run: docker build -t task1 .
       - name: Run unit tests
-        run: pytest task1/test.py
+        run: docker run task1 pytest task1/test.py
