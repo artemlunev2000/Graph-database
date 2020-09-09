@@ -2,5 +2,5 @@ services:
   - docker
 
 script:
-  - docker build -t graphDB .
-  - docker run graphDB
+  - docker build -t graph-db .
+  - docker run graph-db
