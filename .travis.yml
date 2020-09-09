@@ -2,5 +2,5 @@ services:
   - docker
 
 script:
-  - docker build -t graphdb .
-  - docker run graphdb pytest task1/test.py
+  - docker build -t graphDB .
+  - docker run graphDB
