@@ -1,6 +1,6 @@
 # Graph-database
 
-[![Build Status](https://travis-ci.org/artemlunev2000/Graph-database.svg?branch=master)](https://travis-ci.org/artemlunev2000/Graph-database)
+[![Build Status](https://travis-ci.org/artemlunev2000/Graph-database.svg?branch=task01)](https://travis-ci.org/artemlunev2000/Graph-database)
 
 ## Run localy in interactive mode
 
