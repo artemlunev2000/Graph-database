@@ -1,0 +1,6 @@
+services:
+  - docker
+
+script:
+  - docker build -t graph-db .
+  - docker run graph-db /bin/sh -c "pytest tests/test_*.py"
