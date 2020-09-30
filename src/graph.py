@@ -59,16 +59,6 @@ class Graph:
         for state in dfa.final_states:
             self.final_vertices.add(state_number_dict[state])
 
-    # def add_start_states(self, path):
-    #     if path is not None:
-    #         with open(path, 'r') as start_states_file:
-    #             self.start_vertices = set([int(state) for state in start_states_file.readline().split(" ")])
-    #
-    # def add_final_states(self, path):
-    #     if path is not None:
-    #         with open(path, 'r') as final_states_file:
-    #             self.final_vertices = set([int(state) for state in final_states_file.readline().split(" ")])
-
     def intersect(self, graph):
         intersection = Graph()
         intersection.size = self.size * graph.size
@@ -90,10 +80,10 @@ class Graph:
 
         return intersection
 
-    def transitive_closure(self):
+    def transitive_closure_square(self):
         closure = Matrix.sparse(BOOL, self.size, self.size)
         for label in self.labels:
-            closure |= self.projection_matrices[label]
+            closure += self.projection_matrices[label]
 
         prev_nvals = -1
         while prev_nvals != closure.nvals:
@@ -102,8 +92,22 @@ class Graph:
 
         return closure
 
+    def transitive_closure_mul(self):
+        closure = Matrix.sparse(BOOL, self.size, self.size)
+        for label in self.labels:
+            closure += self.projection_matrices[label]
+
+        dup = closure.dup()
+
+        prev_nvals = -1
+        while prev_nvals != closure.nvals:
+            prev_nvals = closure.nvals
+            closure += dup @ closure
+
+        return closure
+
     def reachable_with_start_states(self, start):
-        result = self.transitive_closure()
+        result = self.transitive_closure_square()
 
         for state in range(self.size):
             if state not in start:
@@ -112,7 +116,7 @@ class Graph:
         return result
 
     def reachable_with_start_and_final_states(self, start, final):
-        result = self.transitive_closure()
+        result = self.transitive_closure_square()
 
         for state in range(self.size):
             if state not in start:
