@@ -10,6 +10,11 @@ docker run -it graph-db
 pytest tests/test_*.py
 
 ```
+## Assignment 2
+Realisation of automata intersection and transitive closure
+
+## Assignment 3
+Experiment on algorithms of transitive closure and intersection of automata.
 
 ## Assignment 4
 Realisation of cyk and Hellings algorithms in class Grammar.
