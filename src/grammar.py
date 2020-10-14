@@ -89,3 +89,126 @@ class Grammar:
 
         return result.get(cfg_normal.start_symbol, Matrix.sparse(
             BOOL, graph.size, graph.size))
+
+    def cfpq_multiplication(grammar: CFG, graph: Graph):
+        res = dict()
+        res[grammar.start_symbol] = Matrix.sparse(BOOL, graph.size, graph.size)
+
+        if grammar.generate_epsilon():
+            for i in range(graph.size):
+                res[grammar.start_symbol][i, i] = True
+
+        cfg = grammar.to_normal_form()
+
+        pairs = []
+        units = []
+        for prod in cfg.productions:
+            if len(prod.body) == 2:
+                pairs.append(prod)
+            if len(prod.body) == 1:
+                units.append(prod)
+
+        for label, matrix in graph.projection_matrices.items():
+            for prod in units:
+                if Terminal(label) == prod.body[0]:
+                    if prod.head in res:
+                        res[prod.head] += matrix
+                    else:
+                        res[prod.head] = matrix
+
+        is_changed = True
+        while is_changed:
+            is_changed = False
+            for prod in pairs:
+                if prod.body[0] in res and prod.body[1] in res:
+                    if prod.head not in res:
+                        res[prod.head] = Matrix.sparse(BOOL, graph.size, graph.size)
+                    prev = res[prod.head].nvals
+                    res[prod.head] += res[prod.body[0]] @ res[prod.body[1]]
+                    is_changed = prev != res[prod.head].nvals
+
+        return res[cfg.start_symbol]
+
+    def to_recursive(grammar: CFG):
+        rsm = Graph()
+        heads = dict()
+
+        rsm.size = sum([len(prod.body) + 1 for prod in grammar.productions])
+        rsm.vertices = set(range(rsm.size))
+        i = 0
+        for prod in grammar.productions:
+            start_state = i
+            final_state = i + len(prod.body)
+
+            rsm.start_vertices.add(start_state)
+            rsm.final_vertices.add(final_state)
+            heads[(start_state, final_state)] = prod.head.value
+
+            for var in prod.body:
+                matrix = rsm.projection_matrices.get(var.value, Matrix.sparse(
+                    BOOL, rsm.size, rsm.size))
+
+                matrix[i, i + 1] = True
+                rsm.labels.add(var.value)
+                rsm.projection_matrices[var.value] = matrix
+                i += 1
+
+            i += 1
+
+        return rsm, heads
+
+    def cfpq_tensor(grammar: CFG, graph: Graph):
+        rsm, heads = Grammar.to_recursive(grammar)
+
+        rsm.size = sum([len(prod.body) + 1 for prod in grammar.productions])
+        rsm.vertices = set(range(rsm.size))
+        i = 0
+        for prod in grammar.productions:
+            start_state = i
+            final_state = i + len(prod.body)
+
+            rsm.start_vertices.add(start_state)
+            rsm.final_vertices.add(final_state)
+            heads[(start_state, final_state)] = prod.head.value
+
+            for var in prod.body:
+                matrix = rsm.projection_matrices.get(var.value, Matrix.sparse(BOOL, rsm.size, rsm.size))
+                matrix[i, i + 1] = True
+                rsm.labels.add(var.value)
+                rsm.projection_matrices[var.value] = matrix
+                i += 1
+
+            i += 1
+
+        for prod in grammar.productions:
+            if len(prod.body) == 0:
+                matrix = Matrix.sparse(BOOL, graph.size, graph.size)
+
+                for i in range(graph.size):
+                    matrix[i, i] = True
+                graph.labels.add(prod.head)
+                graph.projection_matrices[prod.head] = matrix
+
+        is_changed = True
+        while is_changed:
+            is_changed = False
+            intersection = rsm.intersect(graph)
+            closure = intersection.transitive_closure_square()
+
+            for i, j, k in zip(*closure.to_lists()):
+                rfa_from, rfa_to = i // graph.size, j // graph.size
+                graph_from, graph_to = i % graph.size, j % graph.size
+
+                if (rfa_from, rfa_to) not in heads:
+                    continue
+                var = heads[(rfa_from, rfa_to)]
+
+                matrix = graph.projection_matrices.get(var, Matrix.sparse(BOOL, graph.size, graph.size))
+
+                if matrix.get(graph_from, graph_to) is None:
+                    is_changed = True
+                    matrix[graph_from, graph_to] = True
+                    graph.labels.add(var)
+                    graph.projection_matrices[var] = matrix
+
+        return graph.projection_matrices[grammar.start_symbol]
