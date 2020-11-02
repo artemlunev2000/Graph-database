@@ -18,3 +18,6 @@ Experiment on algorithms of transitive closure and intersection of automata.
 
 ## Assignment 4
 Realisation of cyk and Hellings algorithms in class Grammar.
+
+## Assignment 5
+Realisation of CFPQ based on matrix multiplication and tensor product added.
