@@ -12,6 +12,25 @@ def test_tensor_1():
 
     matrix = Grammar.cfpq_tensor(gr, graph)
 
+    expected = Matrix.sparse(BOOL, 4, 4)
+
+    expected[0, 1] = True
+    expected[0, 2] = True
+    expected[1, 2] = True
+    expected[3, 0] = True
+    expected[3, 1] = True
+
+    assert expected.iseq(matrix)
+
+def test_tensor_2():
+    grammar = Grammar()
+    gr = grammar.read_grammar("tests/test_data/cfpq/cfpq_grammar2.txt")
+
+    graph = Graph()
+    graph.read_graph('tests/test_data/cfpq/cfpq_graph2.txt')
+
+    matrix = Grammar.cfpq_tensor(gr, graph)
+
     expected = Matrix.sparse(BOOL, 5, 5)
 
     expected[0, 2] = True
@@ -21,12 +40,12 @@ def test_tensor_1():
     assert expected.iseq(matrix)
 
 
-def test_tensor_2():
+def test_tensor_3():
     grammar = Grammar()
-    gr = grammar.read_grammar("tests/test_data/cfpq/cfpq_grammar2.txt")
+    gr = grammar.read_grammar("tests/test_data/cfpq/cfpq_grammar3.txt")
 
     graph = Graph()
-    graph.read_graph('tests/test_data/cfpq/cfpq_graph2.txt')
+    graph.read_graph('tests/test_data/cfpq/cfpq_graph3.txt')
 
     matrix = Grammar.cfpq_tensor(gr, graph)
 
@@ -49,6 +68,25 @@ def test_mul_1():
 
     matrix = Grammar.cfpq_multiplication(gr, graph)
 
+    expected = Matrix.sparse(BOOL, 4, 4)
+
+    expected[0, 1] = True
+    expected[0, 2] = True
+    expected[1, 2] = True
+    expected[3, 0] = True
+    expected[3, 1] = True
+
+    assert expected.iseq(matrix)
+
+def test_mul_2():
+    grammar = Grammar()
+    gr = grammar.read_grammar("tests/test_data/cfpq/cfpq_grammar2.txt")
+
+    graph = Graph()
+    graph.read_graph('tests/test_data/cfpq/cfpq_graph2.txt')
+
+    matrix = Grammar.cfpq_multiplication(gr, graph)
+
     expected = Matrix.sparse(BOOL, 5, 5)
 
     expected[0, 2] = True
@@ -58,12 +96,12 @@ def test_mul_1():
     assert expected.iseq(matrix)
 
 
-def test_mul_2():
+def test_mul_3():
     grammar = Grammar()
-    gr = grammar.read_grammar("tests/test_data/cfpq/cfpq_grammar2.txt")
+    gr = grammar.read_grammar("tests/test_data/cfpq/cfpq_grammar3.txt")
 
     graph = Graph()
-    graph.read_graph('tests/test_data/cfpq/cfpq_graph2.txt')
+    graph.read_graph('tests/test_data/cfpq/cfpq_graph3.txt')
 
     matrix = Grammar.cfpq_multiplication(gr, graph)
 

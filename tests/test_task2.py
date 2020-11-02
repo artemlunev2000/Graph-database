@@ -4,9 +4,9 @@ from pygraphblas import Matrix, BOOL
 
 def test_intersection():
     graph1 = Graph()
-    graph1.read_graph('tests/test_data/graph1.txt')
+    graph1.read_graph('tests/test_data/graphs/graph1.txt')
     regex1 = Graph()
-    regex1.read_regex('tests/test_data/regex1.txt')
+    regex1.read_regex('tests/test_data/regexes/regex1.txt')
 
     intersection = graph1.intersect(regex1)
 
@@ -17,9 +17,9 @@ def test_intersection():
 
 def test_empty_intersection():
     graph2 = Graph()
-    graph2.read_graph('tests/test_data/graph2.txt')
+    graph2.read_graph('tests/test_data/graphs/graph2.txt')
     regex2 = Graph()
-    regex2.read_regex('tests/test_data/regex2.txt')
+    regex2.read_regex('tests/test_data/regexes/regex2.txt')
 
     intersection = graph2.intersect(regex2)
 
@@ -28,7 +28,7 @@ def test_empty_intersection():
 
 def test_reachable_with_start_states():
     graph3 = Graph()
-    graph3.read_graph('tests/test_data/graph3.txt')
+    graph3.read_graph('tests/test_data/graphs/graph3.txt')
 
     result = graph3.reachable_with_start_states([1, 2])
     expected = Matrix.sparse(BOOL, graph3.size, graph3.size)
@@ -42,7 +42,7 @@ def test_reachable_with_start_states():
 
 def test_reachable_with_start_and_final_states():
     graph3 = Graph()
-    graph3.read_graph('tests/test_data/graph3.txt')
+    graph3.read_graph('tests/test_data/graphs/graph3.txt')
 
     result = graph3.reachable_with_start_and_final_states([1], [2])
     expected = Matrix.sparse(BOOL, graph3.size, graph3.size)

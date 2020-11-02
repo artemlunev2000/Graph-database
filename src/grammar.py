@@ -44,6 +44,9 @@ class Grammar:
         result = dict()
         deq = deque()
 
+        pairs = []
+        units = []
+
         if grammar.generate_epsilon():
             matrix = Matrix.sparse(BOOL, graph.size, graph.size)
             for i in range(graph.size):
@@ -53,10 +56,19 @@ class Grammar:
 
         cfg_normal = grammar.to_normal_form()
 
-        for term, matrix in graph.projection_matrices.items():
-            for prod in cfg_normal.productions:
-                if prod.body == [Terminal(term)]:
-                    result[prod.head] = matrix
+        for prod in cfg_normal.productions:
+            if len(prod.body) == 2:
+                pairs.append(prod)
+            if len(prod.body) == 1:
+                units.append(prod)
+
+        for t, matrix in graph.projection_matrices.items():
+            for prod in units:
+                if prod.body == [Terminal(t)]:
+                    if prod.head not in result:
+                        result[prod.head] = matrix.dup()
+                    else:
+                        result[prod.head] += matrix.dup()
 
         for var, matrix in result.items():
             for i, j, _ in zip(*matrix.to_lists()):
@@ -68,7 +80,7 @@ class Grammar:
 
             for new_var, matrix in result.items():
                 for new_from, _ in matrix[:, v_start]:
-                    for prod in cfg_normal.productions:
+                    for prod in pairs:
                         if (prod.body[0] == new_var and prod.body[1] == var and len(prod.body) == 2 and
                                 (prod.head not in result or result[prod.head].get(new_from, v_end) is None)):
                             deq.append((prod.head, new_from, v_end))
@@ -76,7 +88,7 @@ class Grammar:
 
             for new_var, matrix in result.items():
                 for new_start, _ in matrix[v_end, :]:
-                    for prod in cfg_normal.productions:
+                    for prod in pairs:
                         if (prod.body[0] == var and prod.body[1] == new_var and len(prod.body) == 2 and
                                 (prod.head not in result or result[prod.head].get(v_start, new_start) is None)):
                             deq.append((prod.head, v_start, new_start))
