@@ -21,3 +21,44 @@ Realisation of cyk and Hellings algorithms in class Grammar.
 
 ## Assignment 5
 Realisation of CFPQ based on matrix multiplication and tensor product added.
+
+## Assignment 7
+syntax description
+
+#### Connecting database
+```
+connect PATH_TO_DB;
+    
+```
+
+#### Selecting edjes
+```
+select edges from GRAPH;
+    
+```
+
+#### Selecting edjes number
+```
+select count edges from GRAPH;
+    
+```
+
+#### Graph reseive
+```
+graph(PATH_TO_GRAPH)
+
+regex(REGEX)
+
+intersect(GRAPH1, GRAPH2)
+    
+```
+
+#### Regex possible operations
+```
+REGEX*, REGEX+, REGEX?, (REGEX1|REGEX2), REGEX1 REGEX2
+    
+```
+
+examples in tests `/tests/test_task7.py`
+
+
