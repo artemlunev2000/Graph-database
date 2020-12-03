@@ -43,6 +43,23 @@ select count edges from GRAPH;
     
 ```
 
+#### Selecting edjes or number with filter
+```
+select filter (v, e, u) (BOOL_EXP) edges from GRAPH;
+    
+```
+
+#### BOOL_EXP
+```
+STRING has STRING
+is_start STRING
+is_final STRING
+(BOOL_EXP and BOOL_EXP)
+(BOOL_EXP or BOOL_EXP)
+not BOOL_EXP
+    
+```
+
 #### Graph reseive
 ```
 graph(PATH_TO_GRAPH)
@@ -50,11 +67,23 @@ graph(PATH_TO_GRAPH)
 regex(REGEX)
 
 intersect(GRAPH1, GRAPH2)
+
+graph_with_start_final(VERTICES, VERTICES, GRAPH)
+    
+```
+
+#### VERTICES
+```
+set (1, 2, ... )
+range (1, 10)
+none
     
 ```
 
 #### Regex possible operations
 ```
+term(name)
+nonterm(name)
 REGEX*, REGEX+, REGEX?, (REGEX1 or REGEX2), (REGEX1 . REGEX2 . REGEX3)
     
 ```
