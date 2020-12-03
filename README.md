@@ -55,7 +55,7 @@ intersect(GRAPH1, GRAPH2)
 
 #### Regex possible operations
 ```
-REGEX*, REGEX+, REGEX?, (REGEX1|REGEX2), REGEX1 REGEX2
+REGEX*, REGEX+, REGEX?, (REGEX1 or REGEX2), (REGEX1 . REGEX2 . REGEX3)
     
 ```
 
