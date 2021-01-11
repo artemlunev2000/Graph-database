@@ -11,6 +11,21 @@ class Graph:
         self.labels = set()
         self.projection_matrices = dict()
 
+    def copy(self):
+        res = Graph()
+
+        res.size = self.size
+        res.vertices = self.vertices
+        res.start_vertices = self.start_vertices
+        res.final_vertices = self.final_vertices
+        res.labels = set()
+        for label in self.labels:
+            res.labels.add(label)
+        for label in res.labels:
+            res.projection_matrices[label] = self.projection_matrices[label].dup()
+
+        return res
+
     def read_graph(self, path):
         with open(path, 'r') as graph_file:
             lines = graph_file.readlines()
